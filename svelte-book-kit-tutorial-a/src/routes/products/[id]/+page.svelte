@@ -3,11 +3,11 @@
 
     import Slider from "./Slider.svelte";
     export let data;
-    $: ({ product, relatedProducts} = data);
+    $: ({ product, relatedProducts, cart } = data);
     /**
     * @type {string | any[]}
     */
-    let cart = [];
+    //let cart = [];
     /**
     * @param {any} productId
     */
@@ -41,7 +41,10 @@
             </dl>
             <div>
             {#if !cart.includes(product.id)}
-                <button on:click={() => addToCart(product.id)}>カートに入れる</button>
+                <form method="post">
+                    <input type="hidden" name="productId" value={product.id} />
+                    <button>カートに入れる</button>
+                </form>
             {:else}
                 <button disabled>カート追加済み</button>
             {/if}
