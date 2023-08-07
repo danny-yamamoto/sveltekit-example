@@ -1,31 +1,70 @@
-async function getProductFromDatabase() {
-    return {
-        id: 'svelte-book',
-        name: 'Svelte Book',
-        price: 3500,
-        images: [
-            'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-1.png',
-            'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-2.png',
-            'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-3.png',
-        ],
-    };
-}
+import { readFile } from 'fs/promises';
 
-async function getRelatedProductsFromDatabase() {
+async function loadProducts() {
     return [
+        {
+            id: 'svelte-book',
+            name: 'Svelte Book',
+            price: 3500,
+            images: [
+                'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-1.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-2.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-3.png',
+            ],
+        },
         {
             id: 'react-book',
             name: 'React Book',
-            price: 4500,
+            price: 0,
             images: [
                 'https://github.com/svelte-book/sample-app/raw/main/static/react-book-1.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/react-book-2.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/react-book-3.png',
             ],
         },
-    ]
+        {
+            id: 'vue-book',
+            name: 'Vue Book',
+            price: 3500,
+            images: [
+                'https://github.com/svelte-book/sample-app/raw/main/static/vue-book-1.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/vue-book-2.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/vue-book-3.png',
+            ],
+        },
+        {
+            id: 'angular-book',
+            name: 'Angular Book',
+            price: 3500,
+            images: [
+                'https://github.com/svelte-book/sample-app/raw/main/static/angular-book-1.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/angular-book-2.png',
+                'https://github.com/svelte-book/sample-app/raw/main/static/angular-book-3.png',
+            ],
+        },
+    ];
 }
 
-export async function load() {
-    const product = await getProductFromDatabase();
-    const relatedProducts = await getRelatedProductsFromDatabase();
+/**
+ * @param {any} productId
+ */
+async function getProductFromDatabase(productId) {
+    const products = await loadProducts();
+    return products.find((product) => productId === product.id);
+}
+
+/**
+ * @param {unknown} productId
+ */
+async function getRelatedProductsFromDatabase(productId) {
+    const products = await loadProducts();
+    return products.filter((product) => productId !== product.id);
+}
+
+/** load 関数が[id]からparamsを受け取る */
+export async function load({ params }) {
+    const productId = params.id;
+    const product = await getProductFromDatabase(productId);
+    const relatedProducts = await getRelatedProductsFromDatabase(productId);
     return { product, relatedProducts };
 }
