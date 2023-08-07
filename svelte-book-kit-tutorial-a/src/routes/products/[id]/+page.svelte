@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
     import Slider from "./Slider.svelte";
     export let data;
     $: ({ product, relatedProducts} = data);
